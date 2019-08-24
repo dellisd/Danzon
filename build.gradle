@@ -15,6 +15,19 @@ buildscript {
     }
 }
 
+def props = new Properties()
+def localPropsFile = project.rootProject.file("local.properties")
+if (localPropsFile.exists()) {
+    props.load(localPropsFile.newDataInputStream())
+}
+
+if (props.containsKey("mapbox.key")) {
+    def mapboxkey = props.getProperty("mapbox.key")
+    ext.mapboxkey = props.getProperty("mapbox.key")
+} else {
+    throw new GradleException("mapbox.key not declared in local.properties")
+}
+
 allprojects {
     repositories {
         google()
@@ -26,7 +39,7 @@ allprojects {
             }
             credentials {
                 username = 'mapbox'
-                password = 'pk.eyJ1IjoiZGVsbGlzZCIsImEiOiJjam9obzZpMDQwMGQ0M2tsY280OTh2M2o5In0.XtnbkAMU7nIMkq7amsiYdw'
+                password = mapboxkey
             }
         }
     }

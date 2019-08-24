@@ -13,6 +13,19 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        def props = new Properties()
+        def localPropsFile = project.rootProject.file("local.properties")
+        if (localPropsFile.exists()) {
+            props.load(localPropsFile.newDataInputStream())
+        }
+
+        if (props.containsKey("mapbox.key")) {
+            def mapboxkey = props.getProperty("mapbox.key")
+            buildConfigField "String", "MAPBOX_KEY", "\"${mapboxkey}\""
+        } else {
+            throw new GradleException("mapbox.key not declared in local.properties")
+        }
     }
     buildTypes {
         release {
@@ -27,7 +40,7 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'androidx.appcompat:appcompat:1.0.2'
     implementation 'androidx.core:core-ktx:1.0.2'
@@ -35,7 +48,7 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
-    /*implementation "com.mapbox.vision:mapbox-android-vision:0.7.0"
-    implementation "com.mapbox.vision:mapbox-android-vision-ar:0.7.0"
-    implementation "com.mapbox.vision:mapbox-android-vision-safety:0.7.0"*/
+    implementation "com.mapbox.vision:mapbox-android-vision:0.7.1"
+    implementation "com.mapbox.vision:mapbox-android-vision-ar:0.7.1"
+    implementation "com.mapbox.vision:mapbox-android-vision-safety:0.7.1"
 }
